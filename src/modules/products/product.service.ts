@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Product } from '../models/product.model';
+import { ProductDto } from 'src/dto/product.dto';
 
 @Injectable()
 export class ProductService {
@@ -13,16 +14,26 @@ export class ProductService {
         return this.products;
     }
 
-    createProduct(): string {
-        return 'CREATE PRODUCT';
+    createProduct(productDto: ProductDto): Product {
+        const product:Product = {
+            id: Math.random(),
+            ...productDto
+        };
+        this.products.push(product)
+
+        return product;
     }
 
     detailProduct(id: number): Product {
         return this.products.find(item => item.id === Number(id));
     }
 
-    updateProduct(): string {
-        return 'UPDATE PRODUCT';
+    updateProduct(productDto: ProductDto, id: number): Product {
+        const index = this.products.findIndex(item => item.id === Number(id));
+        this.products[index].categoryId = productDto.categoryId;
+        this.products[index].productName = productDto.productName;
+        this.products[index].price = productDto.price;
+        return this.products[index];
     }
 
     deleteProduct(): string {
